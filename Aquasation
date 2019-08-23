@@ -1,0 +1,210 @@
+<apex:page controller="AM_Acquisition_ctrl" id="Acquisition" showHeader="false" standardStylesheets="true" >
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
+    <style>
+        .TOD-UI h1 {
+    font-size: 31px;
+    color: #ffffff !important;
+}
+     .grey_overlay {
+                position: absolute;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index:2;
+                -moz-opacity: 0.4;
+                opacity:.40;
+                filter: alpha(opacity=40);
+            } 
+    </style>
+      <script type="text/javascript">
+        var $ = jQuery.noConflict();
+         $(document).ready(function() {
+             
+             $("#c2").hide(); 
+              $("#c1").hide(); 
+             
+         });
+         
+        function jsFun(){
+           
+            
+             $("#c1").show();
+           
+
+            var AcquisitionName = document.getElementById("Acquisition:AcquisitionReqForm:pb:bussiness-name").value;     
+              // alert(AcquisitionName+' %%');
+            var typeOfHire = $("input[name='Acquisition:AcquisitionReqForm:pb:Typeofhire']:checked").val();
+              
+            jsFunction(AcquisitionName,typeOfHire); 
+             
+        
+        }
+    function showform(){
+     $("#c2").show();
+      var AcquisitionName = document.getElementById("Acquisition:AcquisitionReqForm:pb:bussiness-name").value;     
+              // alert(AcquisitionName+' %%');
+            var typeOfHire = $("input[name='Acquisition:AcquisitionReqForm:pb:Typeofhire']:checked").val();
+              
+            jsFunction(AcquisitionName,typeOfHire); 
+     
+    }
+    /*  function jsFunhide(){
+         $("#c1").hide();
+          $("#c2").hide();
+           document.getElementById("Acquisition:AcquisitionReqForm:pb:selectForm").value=='---None---';
+         } */
+     function jsFuntohide(){
+          var AcquisitionName = document.getElementById("Acquisition:AcquisitionReqForm:pb:bussiness-name").value;   
+         // alert('&&&'+AcquisitionName);
+         if(AcquisitionName =='USI Coordination'){
+             var radiobutton=document.getElementById("campusoption");
+             var checkbox= document.getElementById("Acquisition:AcquisitionReqForm:pb:Typeofhire:1");
+             checkbox.style.visibility='hidden';
+            
+             $( checkbox ).parent().find('label').css('display','none');
+        
+         }
+         
+         else if(AcquisitionName == '' )
+         {
+             $("#c1").hide();
+             $("#c2").hide();
+             var text=document.getElementById("Acquisition:AcquisitionReqForm:pb:selectForm");
+             text.value=" --- None ---";
+             //alert('dhwqgdy'+document.getElementById("Acquisition:AcquisitionReqForm:pb:selectForm").value);
+         }
+         else{
+              document.getElementById("Acquisition:AcquisitionReqForm:pb:Typeofhire:0").checked =false;
+              document.getElementById("Acquisition:AcquisitionReqForm:pb:Typeofhire:1").disabled =false;
+              document.getElementById("Acquisition:AcquisitionReqForm:pb:Typeofhire:1").checked =false;
+              var checkbox= document.getElementById("Acquisition:AcquisitionReqForm:pb:Typeofhire:1");
+              checkbox.style.visibility='visible';
+              $(checkbox).parent().find('label').css('display','inline');
+              $("#c2").hide();
+         }
+         } 
+    
+    function esc(myid) {
+    return '#' + myid.replace(/(:|\.)/g, '\\\\$1');
+    } 
+ 
+    </script>
+    
+    <c:TODFormHeader logo="true" >  </c:TODFormHeader> 
+     <apex:form id="AcquisitionReqForm">
+         <apex:pageBlock id="pb">
+       <div class="content-wrapper">       
+            <div class="TOD-UI" id="main-content" >
+                <div class="content">
+                <!--     <apex:outputPanel rendered="{!loggedInContact = ''}">
+
+                            <div id="contentBlock">
+                                <header class="Title"> You are not authorized to access
+                                    this page. </header>
+                            </div>
+
+                        </apex:outputPanel> -->
+                    <apex:outputPanel >
+                     <apex:actionstatus id="loading">
+                            <apex:facet name="start">
+                                <div id="dvLoading" class="grey_overlay" style="z-index:100;"></div>
+                                <div >
+                                    <img src="/img/loading32.gif" title="Please Wait..." width="30px" style="position: absolute;z-index: 99;top: 20%;left: 49%;"/>
+                                </div>
+                            </apex:facet>
+                        </apex:actionstatus>
+                    <header class="Title" style="padding-bottom:58px;">
+                        <h1>
+                        Evolving Workforce     
+                        </h1>
+                        <a href="{!$Label.Site_Base_URL}internal/Frontdoor?key=AM_RequesterView" style="float:right;color: #fff!important;font-size: 14px!important;display: block;margin-bottom: 20px;margin-top: 10px;">
+                            My Requests</a>
+                    </header> 
+                    <section id="myinformation-content">
+                        <div class="disclaimer">
+                            <p>
+                                <strong>Note:</strong>
+                                Fields marked with asterisk (<span style="color:red">*</span>) are mandatory </p>
+                        </div>
+                       
+                        <apex:pageMessages ></apex:pageMessages>
+                        <article>
+                            <header>
+                                <h3 style="font-size:16px;">Acquisition Requirements</h3>
+                            </header>
+                           <div class="row">
+                               <dl class="col-1">
+                                   <dt >Select the Acquisition Team<span style="color:red;font-size:larger;">*</span> </dt>
+                                       
+                                   <dd>
+                                       <apex:actionregion >
+                                       <apex:inputField id="bussiness-name"  styleClass="clsSelect" required="true" value="{!objcase.AM_AcquisitionTeam__c}" onchange="jsFun(),jsFuntohide()" >
+                                         
+                                           <apex:actionSupport event="onchange" reRender="typeHirePanel"/>
+                                           </apex:inputField>
+                                       </apex:actionregion>
+                                                        
+                                   </dd>
+                               </dl>        
+                              <apex:outputPanel id="opp">
+                                  <apex:outputPanel id="typeHirePanel">
+                                       <dl class="col-1" id="c1">
+                                                        <dt>Type Of Hire<span style="color:red;font-size:larger;">*</span></dt>
+                                                        
+                                                        <dd id="hireType">
+                                                            <apex:actionregion id="actReg">
+                                                            <apex:selectRadio style="width:50%;" required="true" id="Typeofhire" value="{!objcase.AM_Acquisitiontype__c}" styleclass="radio" onchange="showform()">
+                                                                <apex:selectOption itemValue="Experienced" itemlabel="Experienced Hire" id="exp"/>
+                                                              
+                                                               <apex:selectOption itemValue="Campus" itemlabel="Campus Hire" rendered="{!IF(objcase.AM_AcquisitionTeam__c!='USI Coordination',true,false)}" id="campusoption" />
+                                                                   
+                                                               <!--      <apex:actionSupport event="onclick" reRender="formPanel"/> -->
+                                                            
+                                                            </apex:selectRadio>
+                                                            </apex:actionregion>
+                                                        </dd>
+                                       </dl>
+                                   </apex:outputPanel>
+                                   <apex:outputPanel id="formPanel">
+                                       <apex:outputPanel >
+                                           <dl class="col-1" id="c2" >
+                                               <dt >Select Form<span style="color:red;font-size:larger;">*</span> </dt>
+                                                   <dd>
+                                                       <apex:actionRegion >
+                                                       <apex:outputpanel id="ar">
+                                                          <apex:selectList value="{!selectedForm}" size="1" id="selectForm" styleClass="clsSelect" > 
+                                                             <apex:selectOptions value="{!options}" /> 
+                                                          </apex:selectList>
+                                                        </apex:outputpanel> 
+                                                           </apex:actionRegion>
+                                                    </dd>
+                                           </dl>
+                                       </apex:outputPanel>
+                                   </apex:outputPanel>
+                               </apex:outputPanel>
+                              
+                               
+                            </div> 
+                            
+                             
+                        </article>
+                      <footer>
+                                 <div align="right">
+                                   
+                                        <apex:commandButton value="Next"  action="{!next}"  styleClass="butn btn-blue"  id="blue-btn" style="width:10%" />
+                                 </div>
+                            </footer>
+                    </section>
+                    </apex:outputPanel>
+                </div>
+           </div>
+             </div>
+              <apex:actionFunction name="jsFunction" action="{!formListMethod}" reRender="selectForm" status="loading" >
+                    <apex:param name="firstParam" assignTo="{!AcqTeamName}" value="" />
+                    <apex:param name="secondParam" assignTo="{!typeOfHire}" value="" />
+                </apex:actionFunction>
+         </apex:pageBlock>
+    </apex:form>
+</apex:page>
